@@ -1,0 +1,48 @@
+<%- include ../fixed/header.ejs %>
+<div class="jumbotron">
+    <div class="container-fluid ">
+        <div class="row  container-2">
+            <h2 align="center">Sala</h2>   
+            <div class="col-md-4">
+                <button  id="sala" type="button"  class="btn btn-default btn-lg btn-block ">Desligada</button>
+            </div>
+            <div class="col-md-8  ">
+                <button class='btncolor col-md-1' data-color='255,255,255' id="sala2branca" type="button" style="background-color:#fff;height: 3.2em; border: 1px solid gray; border-radius: 5px;  margin-right: 1.5em"></button>
+                <button class='btncolor col-md-1' data-color='255,255,255' id="sala2amarela" type="button" style="background-color:#ffffad;height: 3.2em; border: 1px solid gray; border-radius: 5px;  margin-right: 1.5em" ></button>
+                <button class='btncolor col-md-1' data-color='255,255,255' id="sala2verde" type="button" style="background-color:#008000;height: 3.2em; border: 1px solid gray; border-radius: 5px;  margin-right: 1.5em" ></button>
+                <button class='btncolor col-md-1' data-color='255,255,255' id="sala2verde2" type="button" style="background-color:#35de5a;height: 3.2em; border: 1px solid gray; border-radius: 5px;  margin-right: 1.5em"></button>
+                <button class='btncolor col-md-1' data-color='255,255,255' id="sala2azul" type="button" style="background-color:#00f;height: 3.2em; border: 1px solid gray; border-radius: 5px;  margin-right: 1.5em" ></button>
+                <button class='btncolor col-md-1' id="sala2azul2" type="button" style="background-color:#00d4ff;height: 3.2em; border: 1px solid gray; border-radius: 5px;  margin-right: 1.5em" class="col-md-1 "></button>
+                <button class='btncolor col-md-1' data-color='255,255,255' id="sala2rosa" type="button" style="background-color:#f3f;height: 3.2em; border: 1px solid gray; border-radius: 5px;  margin-right: 1.5em" ></button>
+                <button class='btncolor col-md-1' data-color='255,255,255' id="sala2laranja" type="button" style="background-color:#ff6600;height: 3.2em; border: 1px solid gray; border-radius: 5px;  margin-right: 1.5em"></button>
+                <button class='btncolor col-md-1' data-color='255,255,255' id="sala2vermelha" type="button" style="background-color:#f00;height: 3.2em; border: 1px solid gray; border-radius: 5px" ></button>
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="row">       
+            <div class="col-md-4 container-2"><h4 align="center">Luz da Cozinha</h4>
+                <button type="button" id="cozinha" class="btn btn-default btn-lg btn-block ">Desligada</button>
+            </div>
+            <div class="col-md-4 container-2"><h4 align="center">Luz do Quarto</h4>
+                <button type="button" id="quarto" class="btn btn-default btn-lg btn-block ">Desligada</button>
+            </div>
+            <div class="col-md-4 container-2"><h4 align="center">Luz do Banheiro</h4>
+                <button type="button" id="banheiro" class="btn btn-success btn-lg btn-block  ">Ligada</button>
+            </div>
+        </div>
+        <div class="row">  
+            <div class="col-md-4 container-2"><h4 align="center">Luz da Varanda</h4>
+                <button type="button" id="varanda" class="btn btn-success btn-lg btn-block  ">Ligada</button>
+            </div>
+
+            <div class="col-md-4 container-2"><h4 align="center">Controle do Portão</h4>
+                <button type="button" id="portao" class="btn btn-success btn-lg btn-block ">Ligada</button>
+            </div>
+
+            <div class="col-md-4 container-2"><h4 align="center">Status do Alarme</h4>
+                <button type="button" id="alarme" class="btn btn-success btn-lg btn-block ">Ligada</button>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include ../fixed/footer.ejs %>
