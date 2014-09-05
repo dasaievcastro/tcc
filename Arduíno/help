@@ -1,0 +1,18 @@
+retirei da função de leitura do socketio do arduino
+
+//Serial.println("Req numero: ");
+    //Serial.println(soma);
+
+    /*Resetar a cada 500 conexões, mas não estamos usando*/
+
+    /*if(soma==500){
+      client.send("resetando");
+      digitalWrite(7, LOW); //resetar ethernet (relê)
+      delay(1000); //tempo para descarregamento dos capacitores
+      software_Reset(); // resetar arduino (exceto perifericos)
+    }*/
+
+/*void software_Reset() // Restarta o programa do inicio mas nao reseta os perifericos e registradores 
+{
+ ("jmp 0");  
+}*/
