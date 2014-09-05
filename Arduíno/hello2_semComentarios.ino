@@ -1,3 +1,8 @@
+/* Arquivo para desenvolvimento da aplicação do arduíno
+Programador: Dasaiev Castro
+Programador: Felipe Diogenes*/
+
+/*Bibliotecas*/
 #include <Ethernet.h>
 #include <SocketIOClient.h>
 #include <SPI.h>
@@ -6,37 +11,49 @@
 
 SocketIOClient client;
 
+/*Configurando MAC ADDRESS*/
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEE };
+
+/*IP de configuração do servidor*/
 char hostname[] = "192.168.0.9"; //"54.207.65.161"; //"192.168.0.25";// //
-//IPAddress ip(192, 168, 0, 11); // para definir ip manualmente
+
+/*configurar porta do socket.io*/
 const int port = 8087;
 
 int soma = 0;
 int i;
+/*Pinos para mapeamento das lampadas RGB da Casa*/
 int redpin=6;      //Pin 9
 int greenpin=3;    //Pin 10
 int bluepin=5;      //Pin 11
 int sensorTemperatura = 0;
+
+/*Objeto para representar thread de leitura da temperatura do comodo da cada*/
 Thread threadTemperatura;
 
-void software_Reset() // Restarta o programa do inicio mas nao reseta os perifericos e registradores 
+/*void software_Reset() // Restarta o programa do inicio mas nao reseta os perifericos e registradores 
 {
  ("jmp 0");  
-}
+}*/
+
+
+/*Função que trata os eventos do socketio enviados pela aplicação*/
 
 void ondata(SocketIOClient client, char *data) {  
   String str(data);
   soma++;
   
-  Serial.println("Req numero: ");
-  Serial.println(soma);
+  //Serial.println("Req numero: ");
+  //Serial.println(soma);
   
-   if(soma==500){
+  /*Resetar a cada 500 conexões, mas não estamos usando*/
+  
+  /*if(soma==500){
     client.send("resetando");
     digitalWrite(7, LOW); //resetar ethernet (relê)
     delay(1000); //tempo para descarregamento dos capacitores
     software_Reset(); // resetar arduino (exceto perifericos)
-  }
+  }*/
 
   if(str=="salaOFF"){// recebe de 
    client.send("salaDesligado"); // envia pra todos clientes 
