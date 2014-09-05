@@ -160,6 +160,7 @@ void setup() {
         //digitalWrite(10, HIGH);
         pinMode(7, OUTPUT);//reset ethernet
         digitalWrite(7, HIGH);
+        /*Setando thread pra verificar temperaturas*/
         threadTemperatura.setInterval(6000);
         threadTemperatura.onRun(medeTemperatura);
         //for(i=40;i<47;i++){ //para mega
@@ -167,7 +168,9 @@ void setup() {
         //}
         
         pinMode(3,OUTPUT); // quarto com arduino UNO
-        //Ethernet.begin(mac);
+        /*Iniciando conexão com internet*/
+
+        Ethernet.begin(mac);
         delay(1000);
         //Serial.println(Ethernet.localIP());
 	//client.setDataArrivedDelegate(ondata);
