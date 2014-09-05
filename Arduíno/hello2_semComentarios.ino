@@ -1,9 +1,8 @@
 /* Arquivo para desenvolvimento da aplicação do arduíno
 Programador/Autor: Dasaiev Castro
 Programador/Revisor: Felipe Diogenes
- */
 
-/*Bibliotecas*/
+ * Bibliotecas*/
 #include <Ethernet.h>
 #include <SocketIOClient.h>
 #include <SPI.h>
@@ -21,6 +20,21 @@ char hostname[] = "192.168.0.9"; //"54.207.65.161"; //"192.168.0.25";// //
 /*configurar porta do socket.io*/
 const int port = 8087;
 
+//configurando estrutura pra usar no vetor.
+
+typedef struct {
+    char* nome;
+    char* enviar;
+    char* printar;
+    byte pino;
+    byte sinal;
+} Opcao;
+
+Opcao opcoes[] = [
+    {"salaOFF", "salaDesligado", "desliga", 40, 0},
+    {"salaON", "salaLigado", "liga", 40, 1}
+]
+
 int soma = 0;
 int i;
 /*Pinos para mapeamento das lampadas RGB da Casa*/
@@ -32,15 +46,11 @@ int sensorTemperatura = 0;
 /*Objeto para representar thread de leitura da temperatura do comodo da cada*/
 Thread threadTemperatura;
 
-
-
 /*Função que trata os eventos do socketio enviados pela aplicação*/
 
 void ondata(SocketIOClient client, char *data) {
     String str(data);
     soma++;
-
-    
 
     if (str == "salaOFF") {// recebe de 
         client.send("salaDesligado"); // envia pra todos clientes 
@@ -144,18 +154,20 @@ void desligarVentilador() {
 
 void setup() {
     Serial.begin(9600);
-    //pinMode(10, OUTPUT);
-    //digitalWrite(10, HIGH);
-    pinMode(7, OUTPUT); //reset ethernet
+
+    //módulo ethernet sd
+    pinMode(10, OUTPUT);
+    digitalWrite(10, HIGH);
+    pinMode(7, OUTPUT);
     digitalWrite(7, HIGH);
-    
+
     /*Setando thread pra verificar temperaturas*/
     threadTemperatura.setInterval(6000);
     threadTemperatura.onRun(medeTemperatura);
-    
+
     // quarto com arduino UNO
-    pinMode(3, OUTPUT); 
-    
+    pinMode(3, OUTPUT);
+
     /*Iniciando conexão com internet*/
     Ethernet.begin(mac);
     delay(1000);
@@ -163,7 +175,7 @@ void setup() {
     client.setDataArrivedDelegate(ondata);
 
     //enquanto desconectado tenta concetar à rede
-    while (!client.connect(hostname, port)) { 
+    while (!client.connect(hostname, port)) {
         Serial.println("Not connected.");
         client.connect(hostname, port);
     }
@@ -177,8 +189,7 @@ void loop() {
     if (threadTemperatura.shouldRun()) {
         threadTemperatura.run();
     }
-    
-
+    //instanciando leitor do socket.io
     client.monitor();
     delay(1);
 
