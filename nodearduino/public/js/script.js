@@ -4,7 +4,7 @@ jQuery(document).ready(function($){
 	//$('#change-color-switch').bootstrapSwitch('onColor', 'primary');
 	//$('#change-color-switch').bootstrapSwitch('offColor', 'default');
 
-	io = io.connect('http://192.168.0.9:8087')
+	io = io.connect('http://192.168.1.2:8087')
 
 	var led = 0;
 
@@ -40,7 +40,6 @@ jQuery(document).ready(function($){
 
 	$('.btncolor').click(function(){
 		var color = $(this).data('color');
-		alert(color);
 		io.emit('rotapadrao',{valor:'novacor'+color})
 	})
 
@@ -76,32 +75,51 @@ jQuery(document).ready(function($){
 		if(data.indexOf("Ligado") >-1){
 			data = data.replace("Ligado", "");
 			status = 1;
-		}else{
+		}else if(data.indexOf("Desligado") >-1){
 			data = data.replace("Desligado", "");
 			status = 2;
+		}else{
+			data = data.replace("temperatura", "");
+			//status = 2;
 		}
-		
-		var texto = $('#'+data).text();
-		if(data == "resetando"){
-	    		$('.btn').attr("disabled", true);
-	    		$('#statusenergiaarduino').text('Sincronizando');
-	    		//alert("#statusenergiaarduino");
 
-	    }else if(data == "voltei"){
-	    		$('.btn').attr("disabled", false);
-	    		$('#statusenergiaarduino').text('Arduino Conectado');
-	    }
-		else if(status == 2){
-			    texto = texto.replace("Ligada", "Desligada");
-			    $('#'+data).text(texto);
-			    $('#'+data).removeClass("btn-success");
 
-	    }else if(status == 1){
-	    		texto = texto.replace("Desligada", "Ligada");
-			    $('#'+data).text(texto);
-				$('#'+data).addClass("btn-success");
-	    }
+		if(status==1 || status==2){
+			var texto = $('#'+data).text();
+			if(data == "resetando"){
+		    		$('.btn').attr("disabled", true);
+		    		$('#statusenergiaarduino').text('Sincronizando');
+		    		//alert("#statusenergiaarduino");
 
+		    }else if(data == "voltei"){
+		    		$('.btn').attr("disabled", false);
+		    		$('#statusenergiaarduino').text('Arduino Conectado');
+		    }
+			else if(status == 2){
+				    texto = texto.replace("Ligada", "Desligada");
+				    $('#'+data).text(texto);
+				    $('#'+data).removeClass("btn-success");
+
+		    }else if(status == 1){
+		    		texto = texto.replace("Desligada", "Ligada");
+				    $('#'+data).text(texto);
+					$('#'+data).addClass("btn-success");
+		    }
+		}else{
+			var temp = parseInt(data);
+			$('.progress-bar span').html(parseFloat(data).toFixed(1)+"º C");
+			$('.progress-bar').removeClass('progress-bar-danger progress-bar-warning progress-bar-success');
+			if(temp>=50){
+				$('.progress-bar').addClass('progress-bar-danger');
+			}
+			if(temp>30 && temp<50){
+				$('.progress-bar').addClass('progress-bar-warning');
+			}
+			if(temp<30){
+				$('.progress-bar').addClass('progress-bar-success');
+			}
+			$('.progress-bar').css('width',temp+"%")
+		}
 	    
 
 
