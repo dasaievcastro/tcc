@@ -4,7 +4,7 @@ jQuery(document).ready(function($){
 	//$('#change-color-switch').bootstrapSwitch('onColor', 'primary');
 	//$('#change-color-switch').bootstrapSwitch('offColor', 'default');
 
-	io = io.connect('http://192.168.1.2:8087')
+	io = io.connect('http://192.168.1.4:8087')
 
 	var led = 0;
 
