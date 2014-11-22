@@ -26,6 +26,9 @@ a.btn.btn-primary.btn-lg{
   background-color: #efefef;
   -webkit-box-shadow: 1px 1px 1px 1px #B0B0B0;
 box-shadow: 1px 1px 1px 1px #B0B0B0; /*esquerda, embaixo, */
+    padding-top: 20px;
+    padding-bottom: 20px;
+
 
 }
 .container-2 h1,
@@ -66,10 +69,22 @@ box-shadow: 1px 1px 1px 1px #B0B0B0; /*esquerda, embaixo, */
 	vertical-align: center;
 }
 
-img.img{
-	float: left;
-}
-img.img1{
-	float: right;
-}
 
+img.img{
+	margin: 0 auto;
+  display: block;
+}
+footer{padding:0 48px;}
+footer div{
+  padding:15px 0;
+}
+.btncolor {
+  margin-bottom: 20px;
+}
+.progress-bar-custom {
+  color: #fff;
+  font-size: 17px;
+  line-height: 20px;
+  text-align: center;
+  padding-top: 12px;
+}

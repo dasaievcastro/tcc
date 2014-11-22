@@ -2039,8 +2039,8 @@ select[multiple].input-lg {
 .btn.active {
   background-image: none;
   outline: 0;
-  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+  -webkit-box-shadow: 0 4px 21px rgba(0, 0, 0, 0.52) inset;
+          box-shadow: 0 4px 21px rgba(0, 0, 0, 0.52) inset;
 }
 .btn.disabled,
 .btn[disabled],

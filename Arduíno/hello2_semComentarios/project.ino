@@ -8,6 +8,7 @@ Programador/Revisor: Felipe Diogenes
 #include <SPI.h>
 #include <Thread.h>
 #include <ThreadController.h>
+#include <toneAC.h>
 
 SocketIOClient client;
 
@@ -43,8 +44,10 @@ int ledCopa = 22;
 int ledLuzes = 34;
 int ledAlarme = 36;
 int ventilador = 24;
-int ultrasonicoEnvia = 38, ultrasonicoRecebe = 40, Pinofalante = 4, tempo=5, pararAlarme=1;
-
+int ultrasonicoEnvia = 38, ultrasonicoRecebe = 40, Pinofalante = 4, tempo = 5, pararAlarme = 1;
+float temperaturaPadrao=0;
+float varianciaTemperatura=0.5;
+int luzOnOff = 0;
 /*Objeto para representar thread de leitura da temperatura do comodo da cada*/
 Thread threadTemperatura;
 Thread threadLuminosidade;
@@ -81,8 +84,13 @@ void ondata(SocketIOClient client, char *data) {
   String str(data);
   soma++;
   if (str.indexOf("novacor") >= 0) {
+    
     Serial.println("mudacor");
     str.replace("novacor", "");
+    String cora = "cora"+str;
+    char charBuf[50];
+    cora.toCharArray(charBuf, 50);
+    client.send(charBuf);
     Serial.println(str);
     String R = getValue(str, ',', 0);
     String G = getValue(str, ',', 1);
@@ -93,6 +101,7 @@ void ondata(SocketIOClient client, char *data) {
     analogWrite(redpin, R.toInt());
     analogWrite(greenpin, G.toInt());
     analogWrite(bluepin, B.toInt());
+   
   }
   if (str == "copaOFF") {// recebe de
     client.send("copaDesligado"); // envia pra todos clientes
@@ -114,7 +123,7 @@ void ondata(SocketIOClient client, char *data) {
     client.send("alarmeDesligado"); // envia pra todos clientes
     Serial.println("desliga");
     noTone(Pinofalante);
-    pararAlarme=1;
+    pararAlarme = 1;
   } else if (str == "quartoON") {// recebe de
     client.send("quartoLigado"); // envia pra todos clientes
     Serial.println("liga");
@@ -160,17 +169,22 @@ void medeTemperatura() {
 
   float temp = 0;
   //gambs pra pegar a média da temperatura
-  for(int i=0;i<100;i++){
-  temp += analogRead(sensorTemperatura);
+  for (int i = 0; i < 100; i++) {
+    temp += analogRead(sensorTemperatura);
   }
-  temp = temp/100;
+  temp = temp / 100;
   temp = (temp * 0.488);
   //Serial.print("temperatura:");
-  temp = temp -1;
+  temp = temp - 1;
+if((temp>(temperaturaPadrao+varianciaTemperatura)) || (temp<(temperaturaPadrao-varianciaTemperatura))){
+  temperaturaPadrao = temp;
+  
   if (temp > 33) {
     ligaVentilador(String(temp));
   } else {
     desligaVentilador(String(temp));
+  }
+  
   }
   delay(20);
   //client.send("temperatura" + temp);
@@ -178,45 +192,54 @@ void medeTemperatura() {
 }
 
 void medeLuminosidade() {
-  
+
   int luminosidade = analogRead(sensorLuz);
+  int statusAtualLuz;
   //Serial.println(luminosidade);
   if (luminosidade < 300) {
-    ligaLampadas();
+    statusAtualLuz=1;
+    if(luzOnOff!=statusAtualLuz){
+      ligaLampadas();
+      luzOnOff=1;
+    }
   } else {
-    desligaLampadas();
+    statusAtualLuz=0;
+    if(luzOnOff!=statusAtualLuz){
+      luzOnOff=0;
+      desligaLampadas();
+    }
   }
   delay(20);
 }
 
-void medeAlarme(){
- digitalWrite(ultrasonicoEnvia, LOW); 
- delayMicroseconds(2); 
+void medeAlarme() {
+  digitalWrite(ultrasonicoEnvia, LOW);
+  delayMicroseconds(2);
 
- digitalWrite(ultrasonicoEnvia, HIGH);
- delayMicroseconds(10); 
- 
- digitalWrite(ultrasonicoEnvia, LOW);
- long duration = pulseIn(ultrasonicoRecebe, HIGH);
- 
- //Calculate the distance (in cm) based on the speed of sound.
- long distance = duration/58.2; 
- if(distance<11){
-     pararAlarme=0;
- }
+  digitalWrite(ultrasonicoEnvia, HIGH);
+  delayMicroseconds(10);
+
+  digitalWrite(ultrasonicoEnvia, LOW);
+  long duration = pulseIn(ultrasonicoRecebe, HIGH);
+
+  //Calculate the distance (in cm) based on the speed of sound.
+  long distance = duration / 58.2;
+  if (distance < 11) {
+    pararAlarme = 0;
+  }
 }
 
-void tocarAlarme(){
-  if(pararAlarme==0){
+void tocarAlarme() {
+  if (pararAlarme == 0) {
     client.send("alarmeLigado");
-    for (int frequencia = 150; frequencia < 1800; frequencia += 1) 
+    for (int frequencia = 150; frequencia < 1800; frequencia += 1)
     {
-      tone(Pinofalante, frequencia, tempo); 
+      tone(Pinofalante, frequencia, tempo);
       //delay(1);
     }
-    for (int frequencia = 1800; frequencia > 150; frequencia -= 1) 
+    for (int frequencia = 1800; frequencia > 150; frequencia -= 1)
     {
-      tone(Pinofalante, frequencia, tempo); 
+      tone(Pinofalante, frequencia, tempo);
       //delay(1);
     }
   }
@@ -268,8 +291,8 @@ void setup() {
   //luz alarme
   pinMode(ultrasonicoEnvia, OUTPUT);
   pinMode(ultrasonicoRecebe, INPUT);
-  pinMode(Pinofalante,OUTPUT);
-  
+  pinMode(Pinofalante, OUTPUT);
+
   //pinos rgb
   pinMode(redpin, OUTPUT);
   pinMode(bluepin, OUTPUT);
@@ -299,9 +322,8 @@ void setup() {
   pinMode(3, OUTPUT);
 
   //interruptor
-
+  
   attachInterrupt(5, mudar, HIGH);
-  attachInterrupt(4, alarme, CHANGE );
   /*Iniciando conexão com internet*/
   Ethernet.begin(mac);
   delay(1000);
@@ -353,10 +375,4 @@ void mudar() {
       client.send("copaLigado");
     }
   }
-}
-
-void alarme(){
-  Serial.println("para de invadir");
-  client.send("alarmeLigado");
-  digitalWrite(ledAlarme,HIGH);
 }

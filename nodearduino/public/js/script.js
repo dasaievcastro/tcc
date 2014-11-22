@@ -78,6 +78,9 @@ jQuery(document).ready(function($){
 		}else if(data.indexOf("Desligado") >-1){
 			data = data.replace("Desligado", "");
 			status = 2;
+		}else if(data.indexOf("cora")>-1){
+			data = data.replace("cora", "");
+			status = 3;
 		}else{
 			data = data.replace("temperatura", "");
 			//status = 2;
@@ -105,6 +108,16 @@ jQuery(document).ready(function($){
 				    $('#'+data).text(texto);
 					$('#'+data).addClass("btn-success");
 		    }
+		}else if(status==3){
+			$('.btncolor').each(function(){
+				var esse = $(this);
+				var cor = esse.data('color');
+
+				if(cor==data){
+					$('.btncolor').removeClass("active");
+					esse.addClass("active")
+				}
+			})
 		}else{
 			var temp = parseInt(data);
 			$('.progress-bar span').html(parseFloat(data).toFixed(1)+"º C");
