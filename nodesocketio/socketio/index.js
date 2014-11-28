@@ -62,7 +62,14 @@ function socket(app,db,idasereditado){
 			data = data.replace("Ligado","");
 			data = data.replace("Desligado","");
 			atualizar[data]=status;
-			console.log(atualizar);
+			if(data.indexOf("cora")>=0){
+				data = data.replace("cora","");
+				atualizar['cor']=data;
+			}
+			if(data.indexOf("temperatura")>=0){
+				data = data.replace("temperatura","");
+				atualizar['temperatura']=data;
+			}
 			Usuario.update({'_id':idasereditado},{$set:atualizar},function(err,res){
 				if(err) throw new Error('Erro ao atualizar');
 			 	console.log(res);
